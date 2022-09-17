@@ -66,6 +66,7 @@ public:
 
 public slots:
   bool checkAllowClose();
+  virtual void keyPressEvent(QKeyEvent *ev);
 
 private slots:
   void on_captures_itemSelectionChanged();
@@ -132,7 +133,7 @@ private:
     bool supported = false;
     rdcstr supportMessage;
   };
-
+protected:
   Capture *GetCapture(QListWidgetItem *item);
   void AddCapture(QListWidgetItem *item, Capture *cap);
 

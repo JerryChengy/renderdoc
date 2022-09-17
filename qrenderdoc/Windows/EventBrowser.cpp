@@ -36,6 +36,7 @@
 #include <QRegularExpressionMatch>
 #include <QScrollBar>
 #include <QShortcut>
+#include <QClipboard>
 #include <QSignalBlocker>
 #include <QSortFilterProxyModel>
 #include <QStringListModel>
@@ -3720,6 +3721,16 @@ void EventBrowser::on_bookmark_clicked()
       m_Ctx.SetBookmark(mark);
   }
 }
+void EventBrowser::on_copytoclipboard() 
+{
+  const ActionDescription *action = m_Ctx.CurSelectedAction();
+  if(action)
+  {
+    QClipboard *clipboard = QApplication::clipboard();
+
+    clipboard->setText(action->customName);
+  }
+}
 
 void EventBrowser::on_timeActions_clicked()
 {
@@ -5209,6 +5220,7 @@ void EventBrowser::events_contextMenu(const QPoint &pos)
   QAction collapseAll(tr("&Collapse All"), this);
   QAction toggleBookmark(tr("Toggle &Bookmark"), this);
   QAction selectCols(tr("&Select Columns..."), this);
+  QAction copyToClipboard(tr("&Copy to clipboard"), this);
   QAction rgpSelect(tr("Select &RGP Event"), this);
   rgpSelect.setIcon(Icons::connect());
 
@@ -5216,11 +5228,13 @@ void EventBrowser::events_contextMenu(const QPoint &pos)
   contextMenu.addAction(&collapseAll);
   contextMenu.addAction(&toggleBookmark);
   contextMenu.addAction(&selectCols);
+  contextMenu.addAction(&copyToClipboard);
 
   expandAll.setIcon(Icons::arrow_out());
   collapseAll.setIcon(Icons::arrow_in());
   toggleBookmark.setIcon(Icons::asterisk_orange());
   selectCols.setIcon(Icons::timeline_marker());
+  copyToClipboard.setIcon(Icons::timeline_marker());
 
   expandAll.setEnabled(index.isValid() && ui->events->model()->rowCount(index) > 0);
   collapseAll.setEnabled(expandAll.isEnabled());
@@ -5235,7 +5249,7 @@ void EventBrowser::events_contextMenu(const QPoint &pos)
   QObject::connect(&toggleBookmark, &QAction::triggered, this, &EventBrowser::on_bookmark_clicked);
 
   QObject::connect(&selectCols, &QAction::triggered, this, &EventBrowser::on_colSelect_clicked);
-
+  QObject::connect(&copyToClipboard, &QAction::triggered, this, &EventBrowser::on_copytoclipboard);
   IRGPInterop *rgp = m_Ctx.GetRGPInterop();
   if(rgp && rgp->HasRGPEvent(m_Ctx.CurEvent()))
   {

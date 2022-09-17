@@ -154,6 +154,7 @@ private slots:
   void on_find_toggled(bool checked);
   void on_timeActions_clicked();
   void on_bookmark_clicked();
+  void on_copytoclipboard();
   void on_HideFind();
   void on_findEvent_returnPressed();
   void on_findEvent_keyPress(QKeyEvent *event);

@@ -827,6 +827,15 @@ bool LiveCapture::checkAllowClose()
   return checkAllowClose(unsavedCaptureCount(), dummy);
 }
 
+void LiveCapture::keyPressEvent(QKeyEvent *ev) {
+
+  if(ev->key() == Qt::Key_F5)
+  {
+    on_triggerImmediateCapture_clicked();
+  }
+
+  QWidget::keyPressEvent(ev);
+}
 void LiveCapture::openCapture(Capture *cap)
 {
   cap->opened = true;
